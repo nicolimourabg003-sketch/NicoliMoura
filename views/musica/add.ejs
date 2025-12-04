@@ -1,0 +1,32 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Nova Música</h3>
+      </header>
+      <div class="content">
+  <form id="form-musica" autocomplete="off" action="/musica/add/ok" method="post">
+          <div class="grid">
+            <div>
+              <label for="titulo"> Titulo da Música</label>
+              <input id="titulo" name="titulo" type="text" placeholder="Ex: The Real Slim Shady" required>
+            </div>
+            <div>
+              <label for="compositor"> Compositor da Música</label>
+              <input id="compositor" name="compositor" type="text" placeholder="Ex: Eminem" required>
+            </div>
+            <div>
+              <label for="genero"> Genêro da Música</label>
+              <input id="genero" name="genero" type="text" placeholder="Ex: Hip Hop/ Rap " required>
+            </div>
+            <div>
+              <label for="duracao">Duração</label>
+              <input id="duracao" name="duracao" type="String"  required>
+            </div>
+           <div class="field-help">Os campos com * são obrigatórios.</div>
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/musica/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Adicionar Musica</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>

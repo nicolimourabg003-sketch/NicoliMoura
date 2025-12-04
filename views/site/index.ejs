@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento Musical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Header */
+        header {
+            background: rgba(2, 6, 23, 0.5);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1e293b;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-icon {
+            width: 32px;
+            height: 32px;
+            color: #a855f7;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Section */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            color: #c084fc;
+        }
+
+        h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Album Card */
+        .album-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .album-card:hover {
+            background: #0f172a;
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .album-cover {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .album-card:hover .album-cover img {
+            transform: scale(1.05);
+        }
+
+        .album-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .album-card:hover .album-overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .album-overlay svg {
+            width: 48px;
+            height: 48px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .album-card:hover .album-overlay svg {
+            opacity: 1;
+        }
+
+        .album-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #fff;
+        }
+
+        .album-artist {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .album-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Artist Card */
+        .artist-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .artist-card:hover {
+            background: #0f172a;
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .artist-photo {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #1e293b;
+            margin: 0 auto 1rem;
+        }
+
+        .artist-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .artist-card:hover .artist-photo img {
+            transform: scale(1.05);
+        }
+
+        .artist-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .artist-card:hover .artist-overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .artist-overlay svg {
+            width: 48px;
+            height: 48px;
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .artist-card:hover .artist-overlay svg {
+            opacity: 1;
+        }
+
+        .artist-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #fff;
+        }
+
+        .artist-genre {
+            font-size: 0.875rem;
+            color: #c084fc;
+            margin-bottom: 0.5rem;
+        }
+
+        .artist-albums {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Music Table */
+        .music-table-container {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .music-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .music-table thead tr {
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .music-table th {
+            text-align: left;
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .music-table th:first-child {
+            width: 50px;
+        }
+
+        .music-table th:last-child {
+            width: 100px;
+        }
+
+        .music-table tbody tr {
+            border-bottom: 1px solid rgba(30, 41, 59, 0.5);
+            transition: background 0.2s ease;
+            cursor: pointer;
+        }
+
+        .music-table tbody tr:hover {
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .music-table td {
+            padding: 1rem 1.5rem;
+        }
+
+        .music-number {
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .music-table tbody tr:hover .music-number {
+            display: none;
+        }
+
+        .play-icon {
+            display: none;
+            width: 16px;
+            height: 16px;
+            color: #c084fc;
+            margin: 0 auto;
+        }
+
+        .music-table tbody tr:hover .play-icon {
+            display: block;
+        }
+
+        .music-title {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .music-artist {
+            color: #e2e8f0;
+        }
+
+        .music-album {
+            color: #94a3b8;
+        }
+
+        .music-duration {
+            color: #94a3b8;
+        }
+
+        /* Record Label Card */
+        .label-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .label-card:hover {
+            background: #0f172a;
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .label-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .label-icon-wrapper svg {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+        }
+
+        .label-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .label-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .label-info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .label-info-item svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(2, 6, 23, 0.5);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid #1e293b;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .music-table {
+                font-size: 0.875rem;
+            }
+
+            .music-table th,
+            .music-table td {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                </path>
+            </svg>
+            <h1>Sistema de Gerenciamento Musical</h1>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Álbuns Section -->
+        <section>
+            <div class="section-header">
+                <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                    <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+                </svg>
+                <h2>Álbuns em Destaque</h2>
+
+            </div>
+            <div class="grid">
+                <%albuns.forEach(album=>{%>
+                    <div class="album-card">
+                        <div class="album-cover">
+                            <img src="<%=album.foto%>"
+                                alt="<%=album.titulo%>">
+                            <div class="album-overlay">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                                    <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="album-title">
+                            <%=album.titulo%>
+                        </div>
+                        <div class="album-artist"><%=album.compositor%></div>
+                        <div class="album-info">
+                            <span><%=album.dataDeLancamento.toLocaleDateString()%></span>
+                            <span><%=album.genero%></span>
+                        </div>
+                    </div>
+                    <%})%>
+
+
+
+
+
+            </div>
+        </section>
+
+        <!-- Artistas Section -->
+        <section>
+            <div class="section-header">
+                <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                    </path>
+                </svg>
+                <h2>Artistas</h2>
+            </div>
+            <div class="grid">
+                 <%artistas.forEach(artista=>{%>
+                <div class="artist-card">
+                    <div class="artist-photo">
+                        <img src="<%=artista.foto%>"
+                            alt="<%=artista.nome%>">
+                        <div class="artist-overlay">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="artist-name"><%=artista.nome%></div>
+                    <div class="artist-genre"><%=artista.genero%></div>
+                    <div class="artist-nacionalidade"><%=artista.nacionalidade%></div>
+                </div>
+                  <%})%>
+              
+            </div>
+        </section>
+
+        <!-- Músicas Section -->
+        <section>
+            <div class="section-header">
+                <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3">
+                    </path>
+                </svg>
+                <h2>Músicas Populares</h2>
+            </div>
+            <div class="music-table-container">
+                <table class="music-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Título</th>
+                            <th>Artista</th>
+                            <th>Álbum</th>
+                            <th>
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    style="width: 16px; height: 16px;">
+                                    <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+                                    <polyline points="12 6 12 12 16 14" stroke-width="2"></polyline>
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="music-number">1</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Starlight</td>
+                            <td class="music-artist">Luna Silva</td>
+                            <td class="music-album">Midnight Dreams</td>
+                            <td class="music-duration">3:45</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">2</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Neon Nights</td>
+                            <td class="music-artist">The Neon Collective</td>
+                            <td class="music-album">Electric Souls</td>
+                            <td class="music-duration">4:12</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">3</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Whispers</td>
+                            <td class="music-artist">Marcus Reed</td>
+                            <td class="music-album">Acoustic Sessions</td>
+                            <td class="music-duration">3:28</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">4</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Golden Hour</td>
+                            <td class="music-artist">Sofia Costa</td>
+                            <td class="music-album">Summer Vibes</td>
+                            <td class="music-duration">3:56</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">5</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Eclipse</td>
+                            <td class="music-artist">Luna Silva</td>
+                            <td class="music-album">Midnight Dreams</td>
+                            <td class="music-duration">4:02</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">6</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Electric Dreams</td>
+                            <td class="music-artist">The Neon Collective</td>
+                            <td class="music-album">Electric Souls</td>
+                            <td class="music-duration">3:33</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">7</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Mountain Road</td>
+                            <td class="music-artist">Marcus Reed</td>
+                            <td class="music-album">Acoustic Sessions</td>
+                            <td class="music-duration">4:18</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="music-number">8</div>
+                                <svg class="play-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <polygon points="5 3 19 12 5 21 5 3" stroke-width="2"></polygon>
+                                </svg>
+                            </td>
+                            <td class="music-title">Bossa da Praia</td>
+                            <td class="music-artist">Sofia Costa</td>
+                            <td class="music-album">Summer Vibes</td>
+                            <td class="music-duration">3:41</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gravadoras Section -->
+        <section>
+            <div class="section-header">
+                <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+                <h2>Gravadoras</h2>
+            </div>
+            <div class="grid">
+                <div class="label-card">
+                    <div class="label-icon-wrapper">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="label-name">Stellar Records</div>
+                    <div class="label-info">
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span>15 artistas</span>
+                        </div>
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                            </svg>
+                            <span>Desde 2010</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="label-card">
+                    <div class="label-icon-wrapper">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="label-name">Indie Wave Music</div>
+                    <div class="label-info">
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span>8 artistas</span>
+                        </div>
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                            </svg>
+                            <span>Desde 2015</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="label-card">
+                    <div class="label-icon-wrapper">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="label-name">Acoustic Dreams</div>
+                    <div class="label-info">
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span>12 artistas</span>
+                        </div>
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                            </svg>
+                            <span>Desde 2012</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="label-card">
+                    <div class="label-icon-wrapper">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="label-name">Tropical Sounds</div>
+                    <div class="label-info">
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span>20 artistas</span>
+                        </div>
+                        <div class="label-info-item">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                            </svg>
+                            <span>Desde 2008</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <p class="footer-text">© 2024 Sistema de Gerenciamento Musical. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

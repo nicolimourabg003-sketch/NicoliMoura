@@ -1,0 +1,39 @@
+     <%-include('../cabecalho.ejs')%>
+     <header>
+        <h3>Novo Álbum</h3>
+      </header>
+      <div class="content">
+  <form id="form-album" autocomplete="off" action="/album/add/ok" method="post"
+              enctype="multipart/form-data"
+  >
+            
+          <div class="grid">
+            <div>
+              <label for="titulo">Nome do Álbum</label>
+              <input id="titulo" name="titulo" type="text" placeholder="Ex: Eu Não Sou Boa Influência Pra Você" required>
+            </div>
+             <div>
+              <label for="compositor">Nome do compositor</label>
+              <input id="compositor" name="compositor" type="text" placeholder="Ex: Seu Pereira" required>
+            </div>
+            <div>
+              <label for="foto">foto</label>
+              <input id="foto" name="foto" type="file" required>
+            </div>
+             <div>
+              <label for="genero">Nome do Álbum</label>
+              <input id="genero" name="genero" type="text" placeholder="Ex: MPB" required>
+            </div>
+            <div>
+              <label for="dataDeLancamento">Ano de Fundação</label>
+              <input id="dataDeLancamento" name="dataDeLancamento" type="Date" placeholder="Ex: 2010" required>
+            </div>
+           <div class="field-help">Os campos com * são obrigatórios.</div>
+          <footer>
+            <a type="button" class="btn ghost" id="btn-cancelar" href="/album/lst">Cancelar</a>
+            <button type="submit" class="btn primary">Adicionar Album</button>
+          </footer>
+        </form>
+      </div>
+
+      <%-include('../rodape.ejs')%>
